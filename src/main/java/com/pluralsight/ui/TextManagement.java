@@ -1,6 +1,5 @@
 package com.pluralsight.ui;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class TextManagement
@@ -62,6 +61,26 @@ public class TextManagement
     }
 
     //displaying methods
+    public static void displayText(String text)
+    {
+        System.out.println(text);
+    }
+
+    public void displayText()
+    {
+        System.out.println(this.text);
+    }
+
+    public static void displayTextColor(String text, Colors color) //need to use Color."nameofcolor" as 2nd parameter
+    {
+        System.out.println(color.getCode() + text + Colors.END.getCode());
+    }
+
+    public void displayTextColor(Colors color)
+    {
+        System.out.println(color.getCode() + this.text + Colors.END.getCode());
+    }
+
     private static void displayErrorForUser(int errorNum) //parameter keeps which error message to
                                                         //display modular and flexible
     {
