@@ -1,8 +1,8 @@
 package com.pluralsight.application;
 
+import com.pluralsight.services.TimeStamps;
 import com.pluralsight.ui.Colors;
 import com.pluralsight.ui.TextManagement;
-import org.w3c.dom.Text;
 
 public class Main
 {
@@ -11,5 +11,7 @@ public class Main
         System.out.println("test");
         TextManagement test = new TextManagement();
         TextManagement.displayTextColor("hello", Colors.GREEN);
+        TimeStamps test2 = new TimeStamps();
+        test2.timeStuff();
     }
 }

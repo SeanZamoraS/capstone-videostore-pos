@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TextManagement
 {
-    static Scanner userInput = new Scanner(System.in);
+    private static Scanner userInput = new Scanner(System.in);
 
     private String text;
 
@@ -71,7 +71,7 @@ public class TextManagement
         System.out.println(this.text);
     }
 
-    public static void displayTextColor(String text, Colors color) //need to use Color."nameofcolor" as 2nd parameter
+    public static void displayTextColor(String text, Colors color) //need to use color."nameofcolor" as 2nd parameter
     {
         System.out.println(color.getCode() + text + Colors.END.getCode());
     }
