@@ -19,9 +19,9 @@ public class LineItem
     public double getPrice() {return this.price;}
 
     //methods:
-    public void printLineItem() //will print to receipt
+    public String printLineItem() //returns String to use in a different printing method
     {
-        System.out.printf("""
+        return String.format("""
                 %s
                 ........%.2f\n""", this.name, this.price);
     }

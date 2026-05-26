@@ -15,9 +15,9 @@ public class MediaLineItem extends LineItem
     public String getComment() {return this.comment;}
 
     @Override
-    public void printLineItem()
+    public String printLineItem()
     {
-        System.out.printf("""
+        return String.format("""
                 %s
                 %s
                 ........%.2f\n""", super.getName(), this.comment, super.getPrice());
