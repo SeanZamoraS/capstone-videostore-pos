@@ -19,7 +19,7 @@ public class LineItem
     public double getPrice() {return this.price;}
 
     //methods:
-    public void printLineItem()
+    public void printLineItem() //will print to receipt
     {
         System.out.printf("""
                 %s
