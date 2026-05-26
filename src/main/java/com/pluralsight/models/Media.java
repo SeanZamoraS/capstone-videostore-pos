@@ -29,7 +29,7 @@ public abstract class Media<F extends Enum<F>> //expect argument, it should be a
 
     public boolean isNew()
     {
-        if(this.releaseYear > 2006)
+        if(this.releaseYear >= 2006)
         {
             return true;
         }
