@@ -81,13 +81,17 @@ public class TextManagement
         System.out.println(color.getCode() + this.text + Colors.END.getCode());
     }
 
-    private static void displayErrorForUser(int errorNum) //parameter keeps which error message to
+    public static void displayErrorForUser(int errorNum) //parameter keeps which error message to
                                                         //display modular and flexible
     {
         switch (errorNum)
         {
             case 1: //wrong number in a menu screen
                 System.out.println("Enter a valid menu option.");
+            case 2: //filereader exception
+                System.out.println("Something went wrong reading the catalogue file.");
+            case 3: //general exception when creating catalogue
+                System.out.println("Something may be causing the catalogue to be null.");
         }
     }
 }

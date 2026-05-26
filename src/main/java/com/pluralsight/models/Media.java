@@ -11,12 +11,12 @@ public abstract class Media<F extends Enum<F>> //expect argument, it should be a
 
     private boolean isNew;
 
-    public Media(String id, String title, int releaseYear, ArrayList<F> formats)
+    public Media(String id, String title, int releaseYear)
     {
         this.id = id;
         this.title = title;
         this.releaseYear = releaseYear;
-        this.formats = formats;
+        //this.formats = formats;
 
         setNew();
     }
