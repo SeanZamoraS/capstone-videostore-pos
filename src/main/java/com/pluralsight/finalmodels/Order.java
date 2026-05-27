@@ -12,7 +12,7 @@ public class Order
     {
         this.items = new ArrayList<LineItem>();
     }
-
+    //getters and setters
     public void setTotalTax(double totalTax) {this.totalTax = totalTax;}
     public void setGrandTotal(double grandTotal) {this.grandTotal = grandTotal;}
 
@@ -28,4 +28,12 @@ public class Order
     {
         return this.items;
     }
+
+    //methods:
+    public void addItem(LineItem item)
+    {
+        this.items.add(item);
+    }
+
+
 }

@@ -16,18 +16,19 @@ public class WriteToFile
     private String fileName;
     TimeStamps timeStamp;
 
-    public WriteToFile() //constructor to make file name a timestamp
+    public WriteToFile() //constructor to make file name a timestamp for every order
     {
         this.timeStamp = new TimeStamps();
         this.fileName = this.timeStamp.createReceiptFileName();
     }
 
-    private void createFile()
+    private void createFile() //used by writeToReceipt
     {
-        this.receiptFile = new File(fileName);
+        this.receiptFile = new File("receipts/" + fileName);
     }
 
-    public void writeToReceipt(Order order)
+    public void writeToReceipt(Order order) //must create new WriteToFile each time
+                                            //to use writeToReceipt, prevent same timestamp
     {
         createFile();
         try
@@ -51,9 +52,12 @@ public class WriteToFile
                 fw.write(item.printLineItem());
             }
 
-            String.format("""
+            String endLine = String.format("""
                     ....................Tax: %.2f
                     ....................Total: %.2f""", order.getTotalTax(), order.getGrandTotal());
+            fw.write(endLine);
+
+            fw.close();
         }
         catch (Exception e)
         {

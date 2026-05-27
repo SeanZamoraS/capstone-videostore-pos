@@ -13,4 +13,6 @@ public enum VideoFormats
     {
         this.addOnPrice = addOnPrice;
     }
+
+    public double getAddOnPrice() {return addOnPrice;}
 }

@@ -16,4 +16,8 @@ public enum Consoles
         this.basePrice = basePrice;
     }
 
+    public double getBasePrice() {return basePrice;}
+
+    @Override
+    public String toString() {return super.toString();}
 }
