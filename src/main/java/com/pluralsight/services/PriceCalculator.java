@@ -60,7 +60,7 @@ public class PriceCalculator
         return price;
     }
 
-    private static double roundPrice(double unroundedPrice)
+    public static double roundPrice(double unroundedPrice)
     {
         return (double) Math.round(unroundedPrice * 100) /100; //IntelliJ recommends casting to double
     }

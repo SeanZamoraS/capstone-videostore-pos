@@ -15,4 +15,6 @@ public enum VideoFormats
     }
 
     public double getAddOnPrice() {return addOnPrice;}
+    @Override
+    public String toString() {return super.toString();}
 }

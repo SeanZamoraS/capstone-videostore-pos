@@ -3,10 +3,7 @@ package com.pluralsight.services;
 import com.pluralsight.finalmodels.LineItem;
 import com.pluralsight.finalmodels.MediaLineItem;
 import com.pluralsight.finalmodels.Order;
-import com.pluralsight.models.Consoles;
-import com.pluralsight.models.Media;
-import com.pluralsight.models.Movie;
-import com.pluralsight.models.VideoGame;
+import com.pluralsight.models.*;
 
 public class LineItemBuilder
 {
@@ -39,6 +36,26 @@ public class LineItemBuilder
         return line;
     }
 
+    public static LineItem buildSimpleLineWSFS(Media media, boolean isWS)
+    {
+        LineItem line = buildSimpleLine(media);
+
+        String newName = makeWSFSName(line, isWS);
+        line.setName(newName);
+
+        return line;
+    }
+
+    public static LineItem buildSimpleLine(Merchandise merch) //purchase from Merchandise enum
+    {
+        String name = merch.toString();
+        double price = merch.getBasePrice();
+        price = PriceCalculator.roundPrice(price);
+
+        LineItem line = new LineItem(name, price);
+        return line;
+    }
+
     public static MediaLineItem buildRentalLine(Media media, double price, int dayChoice)
     {
         String comment = "";
@@ -56,22 +73,13 @@ public class LineItemBuilder
     { //only use this method for VHS or SD format choice
         MediaLineItem line = buildRentalLine(media, price, dayChoice);
 
-        String newName = " ";
+        String newName = makeWSFSName(line, isWS);
+        line.setName(newName);
 
-        if(isWS)
-        {
-            String name = line.getName() + " WIDESCREEN";
-            line.setName(name);
-        }
-        else
-        {
-            String name = line.getName() + " FULLSCREEN";
-            line.setName(name);
-        }
         return line;
     }
 
-    public static MediaLineItem buildConsoleLine(Consoles console, int dayChoice)
+    public static MediaLineItem buildConsoleLine(Consoles console, int dayChoice) //console rentals
     {
         String name = console.toString();
         String comment = makeReturnTimeComment(dayChoice);
@@ -81,6 +89,15 @@ public class LineItemBuilder
         return line;
     }
 
+    public static MediaLineItem buildFeeLine(Fee fee) //meow
+    {
+        String name = fee.getName().toString();
+        String comment = "Fined for: " + fee.getMedia().getTitle();
+
+        return null;
+    }
+
+    //private methods, space savers for methods above
     private static String makeReturnTimeComment(int dayChoice)
     {
         TimeStamps timeStamp = new TimeStamps();
@@ -100,5 +117,21 @@ public class LineItemBuilder
                 break;
         }
         return comment;
+    }
+
+    private static String makeWSFSName(LineItem movie, boolean isWS)
+    {
+        String newName = " ";
+
+        if(isWS)
+        {
+            newName = movie.getName() + " WIDESCREEN";
+        }
+        else
+        {
+            newName = movie.getName() + " FULLSCREEN";
+        }
+
+        return newName;
     }
 }
