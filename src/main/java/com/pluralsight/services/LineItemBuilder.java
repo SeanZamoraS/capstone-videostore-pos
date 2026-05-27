@@ -5,11 +5,36 @@ import com.pluralsight.finalmodels.MediaLineItem;
 import com.pluralsight.finalmodels.Order;
 import com.pluralsight.models.Consoles;
 import com.pluralsight.models.Media;
+import com.pluralsight.models.Movie;
+import com.pluralsight.models.VideoGame;
 
 public class LineItemBuilder
 {
-    public static LineItem buildSimpleLine(String name, double price) //pretty useless but just in case
+    public static LineItem buildSimpleLine(String name, double price) //non-specific charges
     {
+        LineItem line = new LineItem(name, price);
+        return line;
+    }
+
+    public static LineItem buildSimpleLine(Media media) //purchase game/movie, non-VHS/SD
+    {
+        String name = media.getTitle() + ": " + media.getChosenFormat();
+
+        double price = 0;
+
+        if (media.getId().contains("MV"))
+        {
+            Movie movie = (Movie) media;
+
+            price = PriceCalculator.calculateMoviePurchase(movie, movie.getChosenFormat());
+        }
+        else
+        {
+            VideoGame game = (VideoGame) media;
+
+            price = PriceCalculator.calculateVideoGamePurchase(game);
+        }
+
         LineItem line = new LineItem(name, price);
         return line;
     }
