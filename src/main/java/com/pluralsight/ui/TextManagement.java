@@ -61,6 +61,33 @@ public class TextManagement
             }
         }
     }
+    public int getUserInputAsInt(int errorNum, int ... options)
+    {
+        while (true)
+        {
+            String input = userInput.nextLine();
+            try
+            {
+                int intInput = Integer.parseInt(input);
+                for(int option : options)
+                {
+                    if(intInput == option) {return intInput;}
+                }
+                Exception exception = new Exception();
+                throw exception;
+            }
+            catch (Exception e)
+            {
+                displayErrorForUser(errorNum);
+            }
+        }
+    }
+
+    public static void pressEnterToContinue()
+    {
+        System.out.println("Press enter to continue.");
+        userInput.nextLine();
+    }
 
     //displaying methods
     public static void displayText(String text)
@@ -83,17 +110,19 @@ public class TextManagement
         System.out.println(color.getCode() + this.text + Colors.END.getCode());
     }
 
-    public static void displayAllMedia(ArrayList<Media> mediaCatalogue)
+    public static void displayAllMedia(ArrayList<? extends Media> mediaCatalogue)//must use ? wildcard
     {
         mediaCatalogue.stream()
                 .forEach(current -> System.out.println(current.getId() + "|" +
                 current.getTitle() + "\n"));
+        //pressEnterToContinue();
     }
 
     public static void displayFormatsAvailable(Media media)
     {
         media.getFormats().stream()
-                .forEach(current -> System.out.println(current + "\n"));
+                .forEach(current -> System.out.println(current.toString() + "\n"));
+        //pressEnterToContinue();
     }
 
     public static void displayErrorForUser(int errorNum) //parameter keeps which error message to
@@ -103,10 +132,13 @@ public class TextManagement
         {
             case 1: //wrong number in a menu screen
                 System.out.println("Enter a valid menu option.");
+                break;
             case 2: //filereader exception
                 System.out.println("Something went wrong reading the catalogue file.");
+                break;
             case 3: //general exception when creating catalogue
                 System.out.println("Something may be causing the catalogue to be null.");
+                break;
         }
     }
 }

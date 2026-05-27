@@ -13,7 +13,7 @@ public class Application
         ObjectsFromFile videoGameFiles = new ObjectsFromFile("videogamecatalogue.csv",
                 "consolekey.csv");
 
-
-        Menu.startMenu();
+        Menu menu = new Menu(movieFiles.createMovieList(), videoGameFiles.createVideoGameList());
+        menu.startMenu();
     }
 }
