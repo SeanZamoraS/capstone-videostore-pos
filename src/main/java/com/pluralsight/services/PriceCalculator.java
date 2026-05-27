@@ -1,9 +1,6 @@
 package com.pluralsight.services;
 
-import com.pluralsight.models.Media;
-import com.pluralsight.models.Movie;
-import com.pluralsight.models.VideoFormats;
-import com.pluralsight.models.VideoGame;
+import com.pluralsight.models.*;
 
 public class PriceCalculator
 {
@@ -58,6 +55,58 @@ public class PriceCalculator
         }
         double price = roundPrice(totalPrice);
         return price;
+    }
+
+    public static double calculateFee(Fee fee, int daysLate) //using SD as basePrice for simplicity
+    {
+        double basePrice = 0;
+        if (fee.getMedia().getId().contains("MV"))
+        {
+            Movie movie = (Movie) fee.getMedia();
+            basePrice = calculateMoviePurchase(movie, VideoFormats.SD);
+        }
+        else
+        {
+            VideoGame game = (VideoGame) fee.getMedia();
+            basePrice = calculateVideoGamePurchase(game);
+        }
+
+        double maxValue = basePrice * 0.5;
+
+        double lateFee = 5.00 * daysLate;
+
+        if(lateFee > maxValue)
+        {
+            lateFee = maxValue;
+        }
+
+        if(fee.getName().toString().contains("LOST"))
+        {
+            lateFee = maxValue + basePrice + 4.00;
+        }
+        lateFee = roundPrice(lateFee);
+        return lateFee;
+    }
+
+    public static double calculateFeeConsole(Consoles console, FeeType lostOrLate, int daysLate)
+    {
+        double basePrice = console.getBasePrice();
+        double maxValue = basePrice * 0.5;
+
+        double lateFee = 0.5 * daysLate;
+
+        if (lateFee > maxValue)
+        {
+            lateFee = maxValue;
+        }
+
+        if (lostOrLate == FeeType.LOSTFEE)
+        {
+            lateFee = basePrice + maxValue + 4.00;
+        }
+
+        lateFee = roundPrice(lateFee);
+        return lateFee;
     }
 
     public static double roundPrice(double unroundedPrice)
