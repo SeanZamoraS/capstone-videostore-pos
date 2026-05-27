@@ -13,5 +13,8 @@ public class Main
         TextManagement.displayTextColor("hello", Colors.GREEN);
         TimeStamps test2 = new TimeStamps();
         test2.timeStuff();
+
+        Application app = new Application();
+        app.startApp();
     }
 }

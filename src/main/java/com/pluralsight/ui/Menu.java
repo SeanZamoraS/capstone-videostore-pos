@@ -1,8 +1,22 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.models.Movie;
+import com.pluralsight.models.VideoGame;
+
+import java.util.ArrayList;
+
 public class Menu
 {
-    static TextManagement menu = new TextManagement();
+    private static TextManagement menu = new TextManagement();
+
+    static ArrayList<Movie> movieCatalogue;
+    static ArrayList<VideoGame> gameCatalogue;
+
+    public Menu(ArrayList<Movie> movieCatalogue, ArrayList<VideoGame> gameCatalogue)
+    {
+        this.movieCatalogue = movieCatalogue;
+        this.gameCatalogue = gameCatalogue;
+    }
 
     public static void startMenu()
     {

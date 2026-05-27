@@ -1,5 +1,7 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.models.Media;
+
 import java.util.*;
 
 public class TextManagement
@@ -79,6 +81,19 @@ public class TextManagement
     public void displayTextColor(Colors color)
     {
         System.out.println(color.getCode() + this.text + Colors.END.getCode());
+    }
+
+    public static void displayAllMedia(ArrayList<Media> mediaCatalogue)
+    {
+        mediaCatalogue.stream()
+                .forEach(current -> System.out.println(current.getId() + "|" +
+                current.getTitle() + "\n"));
+    }
+
+    public static void displayFormatsAvailable(Media media)
+    {
+        media.getFormats().stream()
+                .forEach(current -> System.out.println(current + "\n"));
     }
 
     public static void displayErrorForUser(int errorNum) //parameter keeps which error message to
