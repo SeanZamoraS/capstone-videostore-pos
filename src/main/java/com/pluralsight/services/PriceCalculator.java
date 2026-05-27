@@ -20,6 +20,7 @@ public class PriceCalculator
         {
             price = 45.00 + videoFormat.getAddOnPrice();
         }
+        price = roundPrice(price);
         return price;
     }
 
@@ -34,12 +35,33 @@ public class PriceCalculator
         {
             price = 35.00;
         }
+        price = roundPrice(price);
         return price;
     }
 
-    public static double calculateRentalMovie()
+    public static double calculateRentalMovie(int dayChoice, double totalPrice) //calculate totalPrice w/ above methods
+                                                                                //may also use Console basePrice
     {
+        totalPrice = totalPrice; //making sure it is outside switch brackets, for my own sanity
 
-        return 0;
+        switch(dayChoice)
+        {
+            case 1: // 1 day rental
+                totalPrice *= 0.12; // 0.12 for each day at this rate (1 day)
+                break;
+            case 2: // 3 day rental
+                totalPrice = 3 * (totalPrice * 0.1);
+                break;
+            case 3: // 7 day rental
+                totalPrice = 7 * (totalPrice * 0.8);
+                break;
+        }
+        double price = roundPrice(totalPrice);
+        return price;
+    }
+
+    private static double roundPrice(double unroundedPrice)
+    {
+        return (double) Math.round(unroundedPrice * 100) /100; //IntelliJ recommends casting to double
     }
 }
