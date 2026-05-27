@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Movie extends Media<VideoFormats>
 {
+    //private VideoFormats chosenFormat;
+
     //constructor
     public Movie(String id, String title, int releaseYear)
     {
@@ -15,5 +17,8 @@ public class Movie extends Media<VideoFormats>
         super(id, title, releaseYear);
         super.setFormats(formats);
     }
+
+    //public void setChosenFormat(VideoFormats videoFormat) {this.chosenFormat = videoFormat;}
+    //public VideoFormats getChosenFormat() {return this.chosenFormat;}
 }
 

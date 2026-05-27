@@ -11,6 +11,8 @@ public abstract class Media<F extends Enum<F>> //expect argument, it should be a
 
     private boolean isNew;
 
+    private F chosenFormat;
+
     public Media(String id, String title, int releaseYear)
     {
         this.id = id;
@@ -36,6 +38,8 @@ public abstract class Media<F extends Enum<F>> //expect argument, it should be a
         return false;
     }
 
+    public F getChosenFormat() {return chosenFormat;}
+
     public void setId(String id) {this.id = id;}
     public void setTitle(String title) {this.title = title;}
     public void setReleaseYear(int releaseYear) {this.releaseYear = releaseYear;}
@@ -45,4 +49,6 @@ public abstract class Media<F extends Enum<F>> //expect argument, it should be a
     {
         this.isNew = this.isNew();
     }
+
+    public void setChosenFormat(F format) {this.chosenFormat = format;}
 }

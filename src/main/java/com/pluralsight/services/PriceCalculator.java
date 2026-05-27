@@ -39,7 +39,7 @@ public class PriceCalculator
         return price;
     }
 
-    public static double calculateRentalMovie(int dayChoice, double totalPrice) //calculate totalPrice w/ above methods
+    public static double calculateRental(int dayChoice, double totalPrice) //calculate totalPrice w/ above methods
                                                                                 //may also use Console basePrice
     {
         totalPrice = totalPrice; //making sure it is outside switch brackets, for my own sanity
