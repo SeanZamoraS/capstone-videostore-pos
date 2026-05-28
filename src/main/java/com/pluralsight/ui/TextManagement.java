@@ -114,8 +114,24 @@ public class TextManagement
     {
         mediaCatalogue.stream()
                 .forEach(current -> System.out.println(current.getId() + "|" +
-                current.getTitle() + "\n"));
+                current.getTitle()));
         //pressEnterToContinue();
+    }
+
+    public static boolean displaySearchedMedia(ArrayList<? extends Media> searchedList)
+    {
+        if (searchedList.isEmpty())
+        {
+            System.out.println("No results");
+            return false;
+        }
+
+        for(int i = 0; i < searchedList.size(); i++)
+        {
+            String sequence = Integer.toString(i + 1);
+            System.out.println(sequence + ".) " + searchedList.get(i).getTitle());
+        }
+        return true;
     }
 
     public static void displayFormatsAvailable(Media media)

@@ -4,6 +4,7 @@ import com.pluralsight.finalmodels.Order;
 import com.pluralsight.models.Media;
 import com.pluralsight.models.Movie;
 import com.pluralsight.models.VideoGame;
+import com.pluralsight.services.Search;
 
 import java.util.ArrayList;
 
@@ -146,7 +147,81 @@ public class Menu
                     break;
             }
         }
+    }
 
+    private static void addMediaPrompt(boolean rent, Order currentOrder, boolean movie)
+    {
+        TextManagement.displayText("""
+                ---------Specify Media---------
+                
+                Please specify which media to add.
+                
+                Search by title: """);
+
+        String userSearch = menu.getUserInput();
+        ArrayList<? extends Media> searchedList;
+
+        Search search = new Search();
+
+        if(movie)
+        {
+            searchedList = search.searchForMediaTitle(userSearch, movieCatalogue);
+        }
+        else
+        {
+            searchedList = search.searchForMediaTitle(userSearch, gameCatalogue);
+        }
+
+        if(!TextManagement.displaySearchedMedia(searchedList))
+        {
+            String rememberWord = "";
+            if(rent) {rememberWord = "trying to rent.";}
+            else {rememberWord = "trying to purchase.";}
+
+            TextManagement.displayText("Returning to Add Item screen... check catalogue and try again.");
+            TextManagement.displayText("Remembering that you were " + rememberWord);
+            TextManagement.pressEnterToContinue();
+            addMediaScreen(rent, currentOrder);
+        }
+
+        Movie selectedMovie;
+        VideoGame selectedGame;
+        int userTitleConf = 0;
+
+        if (searchedList.size() == 1)
+        {
+            TextManagement.displayText("Is this title correct? (1 = yes, 9 = no\n");
+            TextManagement.displayText(searchedList.get(0).getTitle());
+
+            userTitleConf = menu.getUserInputAsInt(1, 1, 2);
+        }
+        else
+        {
+            TextManagement.displayText("Enter the number of the correct title (or 9 to cancel): ");
+
+            //handle which inputs are valid by arraylist size... 10:50
+            userTitleConf = menu.getUserInputAsInt(1);
+            switch(userTitleConf)
+            {
+                //?
+            }
+        }
+
+        switch(userTitleConf)
+        {
+            case 1:
+                break;
+            case 9:
+                String rememberWord = "";
+                if (rent) {rememberWord = "trying to rent.";}
+                else {rememberWord = "trying to purchase.";}
+
+                TextManagement.displayText("Returning to Add Item screen... check catalogue and try again.");
+                TextManagement.displayText("Remembering that you were " + rememberWord);
+                TextManagement.pressEnterToContinue();
+                addMediaScreen(rent, currentOrder);
+                break;
+        }
 
     }
 }
