@@ -104,7 +104,22 @@ public class LineItemBuilder
 
         String comment = " ";
 
+        int switchDayChoice = 0;
+
         switch (dayChoice)
+        {
+            case 1:
+                switchDayChoice = 1;
+                break;
+            case 3:
+                switchDayChoice = 2;
+                break;
+            case 7:
+                switchDayChoice = 3;
+                break;
+        }
+
+        switch (switchDayChoice)
         {
             case 1: //1 day rental
                 comment = "Return on: " + timeStamp.createReturnTime(1);

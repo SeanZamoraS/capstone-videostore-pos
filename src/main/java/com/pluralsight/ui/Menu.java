@@ -37,19 +37,19 @@ public class Menu
                 Enter a number to continue:
                 
                 1) Start a new transaction
-                2) Show movie/game catalogue
                 
                 0) Exit PoS\n""");
 
-        int choice = menu.getUserInputAsInt(1, 1, 2, 0);
+        int choice = menu.getUserInputAsInt(1, 1, 0);
 
         switch (choice)
         {
             case 1:
                 orderManagementMenu(null);
                 break;
-            case 2:
+            case 0:
                 System.exit(0);
+                break;
         }
     }
 
@@ -173,11 +173,11 @@ public class Menu
 
         Search search = new Search();
 
-        if(movie) //set searchlist to movie
+        if(movie) //IF MOVIE SETUP BEGIN* set searchlist to movie
         {
             searchedList = search.searchForMediaTitle(userSearch, movieCatalogue);
         }
-        else //set searchlist to videogame
+        else //IF VIDEO GAME SETUP BEGIN+ set searchlist to videogame
         {
             searchedList = search.searchForMediaTitle(userSearch, gameCatalogue);
         }
@@ -194,13 +194,13 @@ public class Menu
             addMediaScreen(rent, currentOrder);
         }
 
-        Movie selectedMovie; //declare end movie
-        VideoGame selectedGame; //declare end game
-        int userTitleConf = 0; //declare which media user chose from list
+        Movie selectedMovie; //*+declare end movie
+        VideoGame selectedGame; //*+declare end game
+        int userTitleConf = 0; //*+declare which media user chose from list
 
-        if (searchedList.size() == 1) //if one result only
+        if (searchedList.size() == 1) //*+if one result only
         {
-            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no\n)");
+            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no)\n");
             TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle() + "\n");
 
             userTitleConf = menu.getUserInputAsInt(1, 1, 2);
@@ -217,9 +217,10 @@ public class Menu
         }
 
         switch(userTitleConf) //which option did user chose? //panic coding anti pattern arrows :)
+                //THE POINT WHERE MOVIE/GAME SPLIT
         {
             case 1: //item on the list #1 or only 1 item + confirmed
-                if(searchedList.get(0).getId().contains("MV")) //if movie
+                if(searchedList.get(0).getId().contains("MV")) //if movie MOVIE BRANCH START*
                 {
                     VideoFormats chosenFormat;
                     if(searchedList.get(0).getFormats().size() == 1) //if one format available
@@ -325,6 +326,11 @@ public class Menu
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
                         }
                     }
+                }
+                //diverge to game branch, copy pasting stuff
+                if(searchedList.get(0).getId().contains("VG"))
+                {
+
                 }
                 TextManagement.displayText("""
                         Adding to cart: 

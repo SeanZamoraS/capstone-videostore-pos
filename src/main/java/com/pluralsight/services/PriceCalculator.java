@@ -41,7 +41,22 @@ public class PriceCalculator
     {
         totalPrice = totalPrice; //making sure it is outside switch brackets, for my own sanity
 
-        switch(dayChoice)
+        int switchDayChoice = 0;
+
+        switch (dayChoice)
+        {
+            case 1:
+                switchDayChoice = 1;
+                break;
+            case 3:
+                switchDayChoice = 2;
+                break;
+            case 7:
+                switchDayChoice = 3;
+                break;
+        }
+
+        switch(switchDayChoice)
         {
             case 1: // 1 day rental
                 totalPrice *= 0.12; // 0.12 for each day at this rate (1 day)
@@ -50,7 +65,7 @@ public class PriceCalculator
                 totalPrice = 3 * (totalPrice * 0.1);
                 break;
             case 3: // 7 day rental
-                totalPrice = 7 * (totalPrice * 0.8);
+                totalPrice = 7 * (totalPrice * 0.08);
                 break;
         }
         double price = roundPrice(totalPrice);
