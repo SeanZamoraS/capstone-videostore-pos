@@ -201,7 +201,7 @@ public class Menu
         if (searchedList.size() == 1) //if one result only
         {
             TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no\n)");
-            TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle());
+            TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle() + "\n");
 
             userTitleConf = menu.getUserInputAsInt(1, 1, 2);
         }
@@ -216,7 +216,7 @@ public class Menu
             {userTitleConf = 9;} //banish user to the shadow realm if number entered doesnt exist on list
         }
 
-        switch(userTitleConf) //which option did user chose? //panic coding anti pattern arrows
+        switch(userTitleConf) //which option did user chose? //panic coding anti pattern arrows :)
         {
             case 1: //item on the list #1 or only 1 item + confirmed
                 if(searchedList.get(0).getId().contains("MV")) //if movie
@@ -234,7 +234,8 @@ public class Menu
                     else //if many formats available
                     {
                         selectedMovie = (Movie) searchedList.get(0);
-                        TextManagement.displayFormatsAvailable(selectedMovie);
+                        TextManagement.displayText("\nHere are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedMovie); //display formats
                         TextManagement.displayText("Please enter a video format for the movie.\n");
 
                         String videoFChoice = menu.getUserInput();
@@ -265,7 +266,7 @@ public class Menu
                     boolean isWS = false;
                     if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
                     {//if format is VHS or SD
-                        TextManagement.displayText("Would you like fullscreen or widescreen? Enter 1 for fullscreen enter 2 for widescreen");
+                        TextManagement.displayText("Would you like fullscreen or widescreen? Enter 1 for fullscreen; enter 2 for widescreen. \n");
                         int screenChoice = menu.getUserInputAsInt(1, 1, 2);
 
                         switch(screenChoice)
@@ -278,7 +279,7 @@ public class Menu
                                 break;
                         }
                     }
-                    TextManagement.displayText("Selected format: " + selectedMovie.getChosenFormat().toString());
+                    TextManagement.displayText("Selected format: " + selectedMovie.getChosenFormat().toString() + "\n");
                     if(rent) // if renting...
                     {
                         System.out.println("Enter the number of days to rent (1 days, 3 days, or 7 days): ");
