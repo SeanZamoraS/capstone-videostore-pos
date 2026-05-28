@@ -173,16 +173,16 @@ public class Menu
 
         Search search = new Search();
 
-        if(movie)
+        if(movie) //set searchlist to movie
         {
             searchedList = search.searchForMediaTitle(userSearch, movieCatalogue);
         }
-        else
+        else //set searchlist to videogame
         {
             searchedList = search.searchForMediaTitle(userSearch, gameCatalogue);
         }
 
-        if(!TextManagement.displaySearchedMedia(searchedList))
+        if(!TextManagement.displaySearchedMedia(searchedList)) //if no results
         {
             String rememberWord = "";
             if(rent) {rememberWord = "trying to rent.";}
@@ -194,18 +194,18 @@ public class Menu
             addMediaScreen(rent, currentOrder);
         }
 
-        Movie selectedMovie;
-        VideoGame selectedGame;
-        int userTitleConf = 0;
+        Movie selectedMovie; //declare end movie
+        VideoGame selectedGame; //declare end game
+        int userTitleConf = 0; //declare which media user chose from list
 
-        if (searchedList.size() == 1)
+        if (searchedList.size() == 1) //if one result only
         {
-            TextManagement.displayText("Is this title correct? (1 = yes, 9 = no\n");
-            TextManagement.displayText(searchedList.get(0).getTitle());
+            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no\n)");
+            TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle());
 
             userTitleConf = menu.getUserInputAsInt(1, 1, 2);
         }
-        else
+        else //if multiple results
         {
             TextManagement.displayText("Enter the number of the correct title (or 9 to cancel): ");
 
@@ -213,12 +213,12 @@ public class Menu
             userTitleConf = menu.getUserInputAsInt(1);
 
             if(userTitleConf > searchedList.size() || userTitleConf < 0)
-            {userTitleConf = 9;}
+            {userTitleConf = 9;} //banish user to the shadow realm if number entered doesnt exist on list
         }
 
-        switch(userTitleConf) //panic coding anti pattern arrows
+        switch(userTitleConf) //which option did user chose? //panic coding anti pattern arrows
         {
-            case 1:
+            case 1: //item on the list #1 or only 1 item + confirmed
                 if(searchedList.get(0).getId().contains("MV")) //if movie
                 {
                     VideoFormats chosenFormat;
@@ -305,7 +305,7 @@ public class Menu
                         }
 
                     }
-                    else
+                    else //purchasing
                     {
                         if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
                         {//if buying an VHS/SD
@@ -331,7 +331,9 @@ public class Menu
                         """);
                 TextManagement.displayText(itemAdded.printLineItem());
 
-
+                TextManagement.displayText("\nReturning to Current Transaction screen...");
+                TextManagement.pressEnterToContinue();
+                orderManagementMenu(currentOrder);
                 break;
             case 9:
                 String rememberWord = "";
