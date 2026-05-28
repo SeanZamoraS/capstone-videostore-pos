@@ -1,10 +1,16 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.finalmodels.MediaLineItem;
+import com.pluralsight.finalmodels.LineItem;
 import com.pluralsight.finalmodels.Order;
 import com.pluralsight.models.Media;
 import com.pluralsight.models.Movie;
+import com.pluralsight.models.VideoFormats;
 import com.pluralsight.models.VideoGame;
+import com.pluralsight.services.LineItemBuilder;
+import com.pluralsight.services.PriceCalculator;
 import com.pluralsight.services.Search;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -129,8 +135,10 @@ public class Menu
             switch(choice)
             {
                 case 1:
+                    addMediaPrompt(rent, currentOrder, true);
                     break;
                 case 2:
+                    addMediaPrompt(rent, currentOrder, false);
                     break;
 
 
@@ -151,6 +159,8 @@ public class Menu
 
     private static void addMediaPrompt(boolean rent, Order currentOrder, boolean movie)
     {
+        int indexOfItemAdded;
+        LineItem itemAdded = null;
         TextManagement.displayText("""
                 ---------Specify Media---------
                 
@@ -201,22 +211,115 @@ public class Menu
 
             //handle which inputs are valid by arraylist size... 10:50
             userTitleConf = menu.getUserInputAsInt(1);
-            switch(userTitleConf)
-            {
-                //?
-            }
+
+            if(userTitleConf > searchedList.size() || userTitleConf < 0)
+            {userTitleConf = 9;}
         }
 
-        switch(userTitleConf)
+        switch(userTitleConf) //panic coding anti pattern arrows
         {
             case 1:
+                if(searchedList.get(0).getId().contains("MV")) //if movie
+                {
+                    VideoFormats chosenFormat;
+                    if(searchedList.get(0).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (VideoFormats) searchedList.get(0).getFormats().get(0);
+                        selectedMovie = (Movie) searchedList.get(0);
+                        selectedMovie.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("Only one format available: " + selectedMovie.getChosenFormat().toString()
+                        + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedMovie = (Movie) searchedList.get(0);
+                        TextManagement.displayFormatsAvailable(selectedMovie);
+                        TextManagement.displayText("Please enter a video format for the movie.\n");
+
+                        String videoFChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (VideoFormats format : selectedMovie.getFormats()) // check for matching format
+                        {
+                            if (videoFChoice.toLowerCase().contains(format.toString().toLowerCase()))
+                            {
+                                selectedMovie.setChosenFormat(format); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+                    boolean isWS = false;
+                    if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {//if format is VHS or SD
+                        TextManagement.displayText("Would you like fullscreen or widescreen? Enter 1 for fullscreen enter 2 for widescreen");
+                        int screenChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch(screenChoice)
+                        {
+                            case 1:
+                                isWS = false; //chose fullscreen
+                                break;
+                            case 2:
+                                isWS = true; //chose widescreen
+                                break;
+                        }
+                    }
+                    TextManagement.displayText("Selected format: " + selectedMovie.getChosenFormat().toString());
+                    if(rent) // if renting...
+                    {
+                        System.out.println("Enter the number of days to rent (1 days, 3 days, or 7 days): ");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateMoviePurchase(selectedMovie, selectedMovie.getChosenFormat());
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if renting and VHS/SD
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLineWSFS(selectedMovie, finalPrice, daysRented, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                        else
+                        {//if renting any other format
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLine(selectedMovie, finalPrice, daysRented);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+
+                    }
+                }
+                TextManagement.displayText("""
+                        Adding to cart: 
+                        
+                        """);
+                TextManagement.displayText(itemAdded.printLineItem());
+
+
                 break;
             case 9:
                 String rememberWord = "";
                 if (rent) {rememberWord = "trying to rent.";}
                 else {rememberWord = "trying to purchase.";}
 
-                TextManagement.displayText("Returning to Add Item screen... check catalogue and try again.");
+                TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
                 TextManagement.displayText("Remembering that you were " + rememberWord);
                 TextManagement.pressEnterToContinue();
                 addMediaScreen(rent, currentOrder);
