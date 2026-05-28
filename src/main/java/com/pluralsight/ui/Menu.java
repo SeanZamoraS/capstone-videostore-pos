@@ -305,6 +305,25 @@ public class Menu
                         }
 
                     }
+                    else
+                    {
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if buying an VHS/SD
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLineWSFS(selectedMovie, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                        else
+                        {//if buying any other format
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLine(selectedMovie);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                    }
                 }
                 TextManagement.displayText("""
                         Adding to cart: 
