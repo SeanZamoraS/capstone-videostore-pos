@@ -128,9 +128,11 @@ public class TextManagement
 
         for(int i = 0; i < searchedList.size(); i++)
         {
+            System.out.println("Found these titles: ");
             String sequence = Integer.toString(i + 1);
             System.out.println(sequence + ".) " + searchedList.get(i).getTitle());
         }
+        System.out.println("\n");
         return true;
     }
 

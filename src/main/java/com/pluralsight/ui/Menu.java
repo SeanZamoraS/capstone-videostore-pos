@@ -200,7 +200,7 @@ public class Menu
 
         if (searchedList.size() == 1) //*+if one result only
         {
-            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no)\n");
+            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no)");
             TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle() + "\n");
 
             userTitleConf = menu.getUserInputAsInt(1, 1, 2);
