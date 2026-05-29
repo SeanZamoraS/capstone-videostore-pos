@@ -22,6 +22,17 @@ Project quirks:
 -I ran out of time on this project, the scope was too big. There are
 features I planned but did not have time to implement. 
 
+It is much easier for me to think and diagram on paper so most of my
+thought process is on paper.
+
 Rough outline of my initial "class diagram": 
 ![Diagram](IMG_2814.png)
+
+Adding more notes/processing:
+
+![notes](1.jpg)
+![notes](2.jpg)
+![notes](3.jpg)
+![notes](4.jpg)
+![notes](5.jpg)
 
