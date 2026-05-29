@@ -67,8 +67,8 @@ public class Menu
                     
                     1) Add a movie/game for purchase
                     2) Add a movie/game for rental 
-                    3) Add merchandise
-                    4) Add a fee
+                    3) Add merchandise X NEXT UPDATE FEATURE
+                    4) Add a fee X NEXT UPDATE FEATURE
                     
                     5) Checkout
                     6) Cancel transaction 
@@ -76,7 +76,7 @@ public class Menu
                     8) View movie catalogue
                     9) View game catalogue\n""");
 
-            int choice = menu.getUserInputAsInt(1, 1, 2, 3, 4, 5, 6, 8, 9);
+            int choice = menu.getUserInputAsInt(1, 1, 2, 4, 5, 6, 8, 9);
 
             switch (choice)
             {
@@ -86,10 +86,11 @@ public class Menu
                 case 2:
                     addMediaScreen(true, currentOrder);
                     break;
-                case 3:
-                    break;
-                case 4:
-                    break;
+                //case 3:
+
+                    //break;
+                //case 4:
+                    //break;
 
                 case 5:
                     checkOutScreen(currentOrder);
@@ -180,6 +181,79 @@ public class Menu
 
     private static void addFeeScreen(Order currentOrder)
     {
+        TextManagement.displayText("""
+                ---------Add Fee---------
+                
+                Enter a number to continue:
+                
+                1) Customer returning item late
+                2) Customer lost item
+                
+                0) Back\n""");
+
+        int feeChoice = menu.getUserInputAsInt(1, 1, 2, 0);
+
+        boolean isLost = false;
+
+        TextManagement.displayText("""
+                What type of item is the customer being fined for?
+                
+                Enter a number to continue:
+                
+                1) Movie
+                2) Video game
+                3) Console\n""");
+
+        int itemChoice = menu.getUserInputAsInt(1, 1, 2, 3);
+
+        Media searchedItem;
+        Consoles chosenConsoles;
+
+        Search search = new Search();
+
+        if (itemChoice == 1 || itemChoice == 2)
+        {
+            TextManagement.displayText("""
+                    Search for the media's title. \n""");
+            String userInput = menu.getUserInput();
+        }
+        else
+        {
+            TextManagement.displayText("Enter the name of the console. \n");
+            String userInput = menu.getUserInput();
+        }
+
+        String userSearched = menu.getUserInput();
+
+        switch (itemChoice)
+        {
+            case 1:
+                ArrayList<? extends Media> searchedList = search.searchForMediaTitle(userSearched, movieCatalogue);
+
+                break;
+            case 2:
+                search.searchForMediaTitle(userSearched, gameCatalogue);
+                break;
+            case 3:
+                break;
+        }
+
+        switch (feeChoice)
+        {
+            case 1:
+                TextManagement.displayText("Enter the number of days late the item is: ");
+                int daysLate = menu.getUserInputAsInt(1);
+                isLost = false;
+                break;
+            case 2:
+                isLost = true;
+                break;
+            case 0:
+                orderManagementMenu(currentOrder);
+                break;
+        }
+
+
 
     }
 
