@@ -162,6 +162,7 @@ public class Menu
         int indexOfItemAdded;
         LineItem itemAdded = null;
         TextManagement.displayText("""
+                
                 ---------Specify Media---------
                 
                 Please specify which media to add.
@@ -200,14 +201,23 @@ public class Menu
 
         if (searchedList.size() == 1) //*+if one result only
         {
-            TextManagement.displayText("Is this title correct?: (1 = yes, 9 = no)");
+            TextManagement.displayText("""
+                    Is this title correct?
+                    Enter a number to continue:
+                    
+                    1) Yes
+                    9) No
+                    """);
+            TextManagement.displayText("TITLE:");
             TextManagement.displayText(searchedList.get(0).getId().toString()+ "|" + searchedList.get(0).getTitle() + "\n");
 
             userTitleConf = menu.getUserInputAsInt(1, 1, 2);
         }
         else //if multiple results
         {
-            TextManagement.displayText("Enter the number of the correct title (or 9 to cancel): ");
+            TextManagement.displayText("""
+                    Enter the number of the correct title:
+                     (or enter 9 to cancel)""");
 
             //handle which inputs are valid by arraylist size... 10:50
             userTitleConf = menu.getUserInputAsInt(1);
@@ -229,15 +239,17 @@ public class Menu
                         selectedMovie = (Movie) searchedList.get(0);
                         selectedMovie.setChosenFormat(chosenFormat);
 
-                        TextManagement.displayText("Only one format available: " + selectedMovie.getChosenFormat().toString()
+                        TextManagement.displayText("\nOnly one format available: " + selectedMovie.getChosenFormat().toString()
                         + ".");
                     }
                     else //if many formats available
                     {
                         selectedMovie = (Movie) searchedList.get(0);
-                        TextManagement.displayText("\nHere are the available formats for this movie:");
+                        TextManagement.displayText("Here are the available formats for this movie:");
                         TextManagement.displayFormatsAvailable(selectedMovie); //display formats
-                        TextManagement.displayText("Please enter a video format for the movie.\n");
+                        TextManagement.displayText("""
+                                Please enter a video format for the movie.
+                                For example, type VHS, SD, HD, or BLURAY (as available).\n""");
 
                         String videoFChoice = menu.getUserInput();
 
@@ -267,7 +279,14 @@ public class Menu
                     boolean isWS = false;
                     if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
                     {//if format is VHS or SD
-                        TextManagement.displayText("Would you like fullscreen or widescreen? Enter 1 for fullscreen; enter 2 for widescreen. \n");
+                        TextManagement.displayText("""
+                                
+                                Would you like the fullscreen or widescreen version?
+                                Enter a number to continue:
+                                
+                                1) Fullscreen
+                                2) Widescreen
+                                """);
                         int screenChoice = menu.getUserInputAsInt(1, 1, 2);
 
                         switch(screenChoice)
@@ -280,10 +299,27 @@ public class Menu
                                 break;
                         }
                     }
-                    TextManagement.displayText("Selected format: " + selectedMovie.getChosenFormat().toString() + "\n");
+                    if (selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {
+                        String word = "fullscreen";
+                        if(isWS)
+                        {
+                            word = "widescreen";
+                        }
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() +
+                                " ("+ word.toUpperCase() + ")" + "\n");
+                    }
+                    else
+                    {
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() + "\n");
+                    }
                     if(rent) // if renting...
                     {
-                        System.out.println("Enter the number of days to rent (1 days, 3 days, or 7 days): ");
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+                                
+                                Enter 1, 3, or 7.""");
                         int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
 
                         double basePrice = PriceCalculator.calculateMoviePurchase(selectedMovie, selectedMovie.getChosenFormat());
@@ -334,7 +370,6 @@ public class Menu
                 }
                 TextManagement.displayText("""
                         Adding to cart: 
-                        
                         """);
                 TextManagement.displayText(itemAdded.printLineItem());
 

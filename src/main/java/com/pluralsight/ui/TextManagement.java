@@ -128,18 +128,19 @@ public class TextManagement
 
         for(int i = 0; i < searchedList.size(); i++)
         {
-            System.out.println("Found these titles: ");
+            System.out.println("\nFound these titles: ");
             String sequence = Integer.toString(i + 1);
             System.out.println(sequence + ".) " + searchedList.get(i).getTitle());
         }
-        System.out.println("\n");
+        System.out.println();
         return true;
     }
 
     public static void displayFormatsAvailable(Media media)
     {
         media.getFormats().stream()
-                .forEach(current -> System.out.println(current.toString() + "\n"));
+                .forEach(current -> System.out.println(current.toString()));
+        System.out.println();
         //pressEnterToContinue();
     }
 
