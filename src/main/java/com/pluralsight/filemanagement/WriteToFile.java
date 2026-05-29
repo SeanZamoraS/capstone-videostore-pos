@@ -53,8 +53,9 @@ public class WriteToFile
             }
 
             String endLine = String.format("""
+                    ....................Total: %.2f
                     ....................Tax: %.2f
-                    ....................Total: %.2f""", order.getTotalTax(), order.getGrandTotal());
+                    ....................Grand Total: %.2f""", order.getTotal(), order.getTotalTax(), order.getGrandTotal());
             fw.write(endLine);
 
             fw.close();
@@ -63,5 +64,29 @@ public class WriteToFile
         {
             TextManagement.displayErrorForUser(3);
         }
+    }
+    public void showReceipt(Order order)
+    {
+        System.out.println("""
+                    |*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*|
+                    |-------------Le Epic Video Store-------------|
+                    |*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*|
+                            
+                            Thank you for your patronage.
+                                  """);
+
+        String receiptStamp = timeStamp.createPrettyTimeStamp();
+        System.out.println(receiptStamp);
+
+        System.out.println("\n Items Purchased:\n");
+        for(LineItem item : order.getItems())
+        {
+            System.out.print(item.printLineItem());
+        }
+
+        System.out.printf("""
+                ....................Total: %.2f
+                ....................Tax: %.2f
+                ....................Grand Total: %.2f""\", order.getTotal(), order.getTotalTax(), order.getGrandTotal());""");
     }
 }
