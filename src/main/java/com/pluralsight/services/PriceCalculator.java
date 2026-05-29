@@ -1,5 +1,6 @@
 package com.pluralsight.services;
 
+import com.pluralsight.finalmodels.Order;
 import com.pluralsight.models.*;
 
 public class PriceCalculator
@@ -122,6 +123,29 @@ public class PriceCalculator
 
         lateFee = roundPrice(lateFee);
         return lateFee;
+    }
+
+    public static double calculateTotal(Order order)
+    {
+        double total = order.getItems().stream()
+                .mapToDouble(item -> item.getPrice()) //apparently best practice?
+                .sum();
+
+        total = roundPrice(total);
+        return total;
+    }
+
+    public static double calculateTax(Order order)
+    {
+        double tax = calculateTotal(order);
+        tax *= 0.1;
+        tax = roundPrice(tax);
+        return tax;
+    }
+
+    public static double calculateGrandTotal(double total, double tax)
+    {
+        return roundPrice(total + tax);
     }
 
     public static double roundPrice(double unroundedPrice)
