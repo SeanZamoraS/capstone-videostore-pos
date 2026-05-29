@@ -178,6 +178,11 @@ public class Menu
         }
     }
 
+    private static void addFeeScreen(Order currentOrder)
+    {
+
+    }
+
     private static void addMediaScreen(boolean rent, Order currentOrder)
     {
         currentOrder = currentOrder;
@@ -252,13 +257,14 @@ public class Menu
         if(!TextManagement.displaySearchedMedia(searchedList)) //if no results
         {
             String rememberWord = "";
-            if(rent) {rememberWord = "trying to rent.";}
-            else {rememberWord = "trying to purchase.";}
+            if(rent) {rememberWord = "trying to rent something.";}
+            else {rememberWord = "trying to purchase something.";}
 
             TextManagement.displayText("Returning to Add Item screen... check catalogue and try again.");
-            TextManagement.displayText("Remembering that you were " + rememberWord);
+            TextManagement.displayText("\nRemembering that you were " + rememberWord);
             TextManagement.pressEnterToContinue();
             addMediaScreen(rent, currentOrder);
+            return;
         }
 
         Movie selectedMovie; //*+declare end movie
@@ -284,7 +290,7 @@ public class Menu
         {
             TextManagement.displayText("""
                     Enter the number of the correct title:
-                     (or enter 9 to cancel)""");
+                    (or enter 9 to cancel)""");
 
             //handle which inputs are valid by arraylist size... 10:50
             userTitleConf = menu.getUserInputAsInt(1);
@@ -294,7 +300,7 @@ public class Menu
         }
 
         switch(userTitleConf) //which option did user chose? //panic coding anti pattern arrows :)
-                //THE POINT WHERE MOVIE/GAME SPLIT
+                //THE POINT WHERE MOVIE/GAME SPLIT +*+*+*+*+*+**+*+*+**+*+**+START OF SWITCH
         {
             case 1: //item on the list #1 or only 1 item + confirmed
                 if(searchedList.get(0).getId().contains("MV")) //if movie MOVIE BRANCH START*
@@ -399,6 +405,11 @@ public class Menu
                             currentOrder.addItem(orderLine);
                             indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
                         }
                         else
                         {//if renting any other format
@@ -407,6 +418,11 @@ public class Menu
                             currentOrder.addItem(orderLine);
                             indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
                         }
 
 
@@ -421,6 +437,11 @@ public class Menu
                             currentOrder.addItem(orderLine);
                             indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
                         }
                         else
                         {//if buying any other format
@@ -429,6 +450,11 @@ public class Menu
                             currentOrder.addItem(orderLine);
                             indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
                         }
                     }
                 }
@@ -558,6 +584,574 @@ public class Menu
                 TextManagement.displayText("\nReturning to Current Transaction screen...");
                 TextManagement.pressEnterToContinue();
                 orderManagementMenu(currentOrder);
+                break;
+            case 2:
+                if(searchedList.get(1).getId().contains("MV")) //if movie MOVIE BRANCH START*
+                {
+                    VideoFormats chosenFormat;
+                    if(searchedList.get(1).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (VideoFormats) searchedList.get(1).getFormats().get(1);
+                        selectedMovie = (Movie) searchedList.get(1);
+                        selectedMovie.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("\nOnly one format available: " + selectedMovie.getChosenFormat().toString()
+                                + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedMovie = (Movie) searchedList.get(1);
+                        TextManagement.displayText("Here are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedMovie); //display formats
+                        TextManagement.displayText("""
+                                Please enter a video format for the movie.
+                                For example, type VHS, SD, HD, or BLURAY (as available).\n""");
+
+                        String videoFChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (VideoFormats format : selectedMovie.getFormats()) // check for matching format
+                        {
+                            if (videoFChoice.toLowerCase().contains(format.toString().toLowerCase()))
+                            {
+                                selectedMovie.setChosenFormat(format); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+                    boolean isWS = false;
+                    if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {//if format is VHS or SD
+                        TextManagement.displayText("""
+                                
+                                Would you like the fullscreen or widescreen version?
+                                Enter a number to continue:
+                                
+                                1) Fullscreen
+                                2) Widescreen
+                                """);
+                        int screenChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch(screenChoice)
+                        {
+                            case 1:
+                                isWS = false; //chose fullscreen
+                                break;
+                            case 2:
+                                isWS = true; //chose widescreen
+                                break;
+                        }
+                    }
+                    if (selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {
+                        String word = "fullscreen";
+                        if(isWS)
+                        {
+                            word = "widescreen";
+                        }
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() +
+                                " ("+ word.toUpperCase() + ")" + "\n");
+                    }
+                    else
+                    {
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() + "\n");
+                    }
+                    if(rent) // if renting...
+                    {
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+                                
+                                Enter 1, 3, or 7.""");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateMoviePurchase(selectedMovie, selectedMovie.getChosenFormat());
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if renting and VHS/SD
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLineWSFS(selectedMovie, finalPrice, daysRented, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                        else
+                        {//if renting any other format
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLine(selectedMovie, finalPrice, daysRented);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+
+
+
+                    }
+                    else //purchasing
+                    {
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if buying an VHS/SD
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLineWSFS(selectedMovie, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                        else
+                        {//if buying any other format
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLine(selectedMovie);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                    }
+                }
+                //diverge to game branch, copy pasting stuff +++++++++++++++++++++++++++
+                if(searchedList.get(1).getId().contains("VG")) //
+                {
+                    Consoles chosenFormat;
+                    if(searchedList.get(1).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (Consoles) searchedList.get(1).getFormats().get(1);
+                        selectedGame = (VideoGame) searchedList.get(1);
+                        selectedGame.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("\nOnly one format available: " + selectedGame.getChosenFormat().toString()
+                                + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedGame = (VideoGame) searchedList.get(1);
+                        TextManagement.displayText("Here are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedGame); //display formats
+                        TextManagement.displayText("""
+                                Please enter a console for the game.
+                                For example, type WII, GAMECUBE, XBOX360, XBOX, PS2, or PS3 (as available).\n""");
+
+                        String consoleChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (Consoles console : selectedGame.getFormats()) // check for matching format
+                        {
+                            if (consoleChoice.toLowerCase().contains(console.toString().toLowerCase()))
+                            {
+                                selectedGame.setChosenFormat(console); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+
+                    TextManagement.displayText("\nSelected format: " + selectedGame.getChosenFormat().toString() + "\n");
+
+                    if(rent) // if renting...
+                    {
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+                                
+                                Enter 1, 3, or 7.""");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateVideoGamePurchase(selectedGame);
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        MediaLineItem orderLine =
+                                LineItemBuilder.buildRentalLine(selectedGame, finalPrice, daysRented);
+                        currentOrder.addItem(orderLine);
+                        indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                        itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                        TextManagement.displayText("""
+                        Adding to cart: 
+                        """);
+                        TextManagement.displayText(itemAdded.printLineItem());
+
+                        TextManagement.displayText("Would the customer like to check out a " + selectedGame.getChosenFormat().toString()
+                                + " to go with " + selectedGame.getTitle() +"?");
+                        TextManagement.displayText("""
+                                
+                                1) Yes
+                                2) No
+                                """);
+
+                        int consoleRentChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch (consoleRentChoice)
+                        {
+                            case 1:
+                                int indexOfItemAdded1;
+                                LineItem itemAdded1;
+
+                                MediaLineItem consoleLine =
+                                        LineItemBuilder.buildConsoleLine(selectedGame.getChosenFormat(), daysRented);
+                                currentOrder.addItem(consoleLine);
+                                indexOfItemAdded1 = currentOrder.getItems().indexOf(consoleLine);
+                                itemAdded1 = currentOrder.getItems().get(indexOfItemAdded1);
+
+                                TextManagement.displayText("""
+                                        
+                                        Adding to cart: 
+                                        """);
+                                TextManagement.displayText(itemAdded1.printLineItem());
+                                break;
+                            case 2:
+                                TextManagement.displayText("\nNo worries.");
+                                break;
+                        }
+
+                    }
+                    else //purchasing
+                    {
+                        LineItem orderLine =
+                                LineItemBuilder.buildSimpleLine(selectedGame);
+                        currentOrder.addItem(orderLine);
+                        indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                        itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                        TextManagement.displayText("""
+                        Adding to cart: 
+                        """);
+                        TextManagement.displayText(itemAdded.printLineItem());
+
+                    }
+                }
+
+                TextManagement.displayText("\nReturning to Current Transaction screen...");
+                TextManagement.pressEnterToContinue();
+                orderManagementMenu(currentOrder);
+
+                break;
+            case 3:
+                if(searchedList.get(2).getId().contains("MV")) //if movie MOVIE BRANCH START*
+                {
+                    VideoFormats chosenFormat;
+                    if(searchedList.get(2).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (VideoFormats) searchedList.get(2).getFormats().get(2);
+                        selectedMovie = (Movie) searchedList.get(2);
+                        selectedMovie.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("\nOnly one format available: " + selectedMovie.getChosenFormat().toString()
+                                + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedMovie = (Movie) searchedList.get(2);
+                        TextManagement.displayText("Here are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedMovie); //display formats
+                        TextManagement.displayText("""
+                                Please enter a video format for the movie.
+                                For example, type VHS, SD, HD, or BLURAY (as available).\n""");
+
+                        String videoFChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (VideoFormats format : selectedMovie.getFormats()) // check for matching format
+                        {
+                            if (videoFChoice.toLowerCase().contains(format.toString().toLowerCase()))
+                            {
+                                selectedMovie.setChosenFormat(format); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+                    boolean isWS = false;
+                    if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {//if format is VHS or SD
+                        TextManagement.displayText("""
+                                
+                                Would you like the fullscreen or widescreen version?
+                                Enter a number to continue:
+                                
+                                1) Fullscreen
+                                2) Widescreen
+                                """);
+                        int screenChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch(screenChoice)
+                        {
+                            case 1:
+                                isWS = false; //chose fullscreen
+                                break;
+                            case 2:
+                                isWS = true; //chose widescreen
+                                break;
+                        }
+                    }
+                    if (selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {
+                        String word = "fullscreen";
+                        if(isWS)
+                        {
+                            word = "widescreen";
+                        }
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() +
+                                " ("+ word.toUpperCase() + ")" + "\n");
+                    }
+                    else
+                    {
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() + "\n");
+                    }
+                    if(rent) // if renting...
+                    {
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+                                
+                                Enter 1, 3, or 7.""");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateMoviePurchase(selectedMovie, selectedMovie.getChosenFormat());
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if renting and VHS/SD
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLineWSFS(selectedMovie, finalPrice, daysRented, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                        else
+                        {//if renting any other format
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLine(selectedMovie, finalPrice, daysRented);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+
+
+
+                    }
+                    else //purchasing
+                    {
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if buying an VHS/SD
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLineWSFS(selectedMovie, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                        else
+                        {//if buying any other format
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLine(selectedMovie);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                            TextManagement.displayText("""
+                            Adding to cart: 
+                            """);
+                            TextManagement.displayText(itemAdded.printLineItem());
+                        }
+                    }
+                }
+                //diverge to game branch, copy pasting stuff +++++++++++++++++++++++++++
+                if(searchedList.get(2).getId().contains("VG")) //
+                {
+                    Consoles chosenFormat;
+                    if(searchedList.get(2).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (Consoles) searchedList.get(2).getFormats().get(2);
+                        selectedGame = (VideoGame) searchedList.get(2);
+                        selectedGame.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("\nOnly one format available: " + selectedGame.getChosenFormat().toString()
+                                + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedGame = (VideoGame) searchedList.get(2);
+                        TextManagement.displayText("Here are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedGame); //display formats
+                        TextManagement.displayText("""
+                                Please enter a console for the game.
+                                For example, type WII, GAMECUBE, XBOX360, XBOX, PS2, or PS3 (as available).\n""");
+
+                        String consoleChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (Consoles console : selectedGame.getFormats()) // check for matching format
+                        {
+                            if (consoleChoice.toLowerCase().contains(console.toString().toLowerCase()))
+                            {
+                                selectedGame.setChosenFormat(console); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+
+                    TextManagement.displayText("\nSelected format: " + selectedGame.getChosenFormat().toString() + "\n");
+
+                    if(rent) // if renting...
+                    {
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+                                
+                                Enter 1, 3, or 7.""");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateVideoGamePurchase(selectedGame);
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        MediaLineItem orderLine =
+                                LineItemBuilder.buildRentalLine(selectedGame, finalPrice, daysRented);
+                        currentOrder.addItem(orderLine);
+                        indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                        itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                        TextManagement.displayText("""
+                        Adding to cart: 
+                        """);
+                        TextManagement.displayText(itemAdded.printLineItem());
+
+                        TextManagement.displayText("Would the customer like to check out a " + selectedGame.getChosenFormat().toString()
+                                + " to go with " + selectedGame.getTitle() +"?");
+                        TextManagement.displayText("""
+                                
+                                1) Yes
+                                2) No
+                                """);
+
+                        int consoleRentChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch (consoleRentChoice)
+                        {
+                            case 1:
+                                int indexOfItemAdded1;
+                                LineItem itemAdded1;
+
+                                MediaLineItem consoleLine =
+                                        LineItemBuilder.buildConsoleLine(selectedGame.getChosenFormat(), daysRented);
+                                currentOrder.addItem(consoleLine);
+                                indexOfItemAdded1 = currentOrder.getItems().indexOf(consoleLine);
+                                itemAdded1 = currentOrder.getItems().get(indexOfItemAdded1);
+
+                                TextManagement.displayText("""
+                                        
+                                        Adding to cart: 
+                                        """);
+                                TextManagement.displayText(itemAdded1.printLineItem());
+                                break;
+                            case 2:
+                                TextManagement.displayText("\nNo worries.");
+                                break;
+                        }
+
+                    }
+                    else //purchasing
+                    {
+                        LineItem orderLine =
+                                LineItemBuilder.buildSimpleLine(selectedGame);
+                        currentOrder.addItem(orderLine);
+                        indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                        itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+
+                        TextManagement.displayText("""
+                        Adding to cart: 
+                        """);
+                        TextManagement.displayText(itemAdded.printLineItem());
+
+                    }
+                }
+
+                TextManagement.displayText("\nReturning to Current Transaction screen...");
+                TextManagement.pressEnterToContinue();
+                orderManagementMenu(currentOrder);
+
                 break;
             case 9:
                 String rememberWord = "";

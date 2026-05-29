@@ -130,7 +130,7 @@ public class TextManagement
         {
             System.out.println("\nFound these titles: ");
             String sequence = Integer.toString(i + 1);
-            System.out.println(sequence + ".) " + searchedList.get(i).getTitle());
+            System.out.println(sequence + ") " + searchedList.get(i).getTitle());
         }
         System.out.println();
         return true;
