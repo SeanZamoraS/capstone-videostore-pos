@@ -26,7 +26,7 @@ public class Menu
 
     public static void startMenu()
     {
-        TextManagement.displayText("""
+        TextManagement.displayTextColor("""
                 --------------Start Menu--------------
                 
                 Le Epic Video Store | Point of Sales
@@ -35,7 +35,7 @@ public class Menu
                 
                 1) Start a new transaction
                 
-                0) Exit PoS\n""");
+                0) Exit PoS\n""", Colors.CYAN);
 
         int choice = menu.getUserInputAsInt(1, 1, 0);
 
@@ -60,7 +60,7 @@ public class Menu
 
         while (true)
         {
-            TextManagement.displayText("""
+            TextManagement.displayTextColor("""
                     ---------Current Transaction---------
                     
                     Enter a number to continue:
@@ -74,9 +74,9 @@ public class Menu
                     6) Cancel transaction 
                     
                     8) View movie catalogue
-                    9) View game catalogue\n""");
+                    9) View game catalogue\n""", Colors.PURPLE);
 
-            int choice = menu.getUserInputAsInt(1, 1, 2, 4, 5, 6, 8, 9);
+            int choice = menu.getUserInputAsInt(1, 1, 2, 5, 6, 8, 9);
 
             switch (choice)
             {
@@ -113,7 +113,7 @@ public class Menu
 
     private static void checkOutScreen(Order currentOrder)
     {
-        TextManagement.displayText("""
+        TextManagement.displayTextColor("""
                 ---------Checkout---------
                 
                 Enter a number to continue:
@@ -122,7 +122,7 @@ public class Menu
                 2) Cancel order
                 
                 0) Back
-                """);
+                """, Colors.GREEN);
 
         int choice = menu.getUserInputAsInt(1, 1,2, 0);
 
@@ -263,7 +263,7 @@ public class Menu
 
         while(true)
         {
-            TextManagement.displayText("""
+            TextManagement.displayTextColor("""
                     ---------Add Item---------
                     
                     Enter a number to continue:
@@ -273,7 +273,7 @@ public class Menu
                     
                     8) View movie catalogue
                     9) View game catalogue
-                    0) Back\n""");
+                    0) Back\n""", Colors.RED);
 
             int choice = menu.getUserInputAsInt(1, 1, 2, 8, 9, 0);
 
@@ -306,13 +306,13 @@ public class Menu
     {
         int indexOfItemAdded;
         LineItem itemAdded = null;
-        TextManagement.displayText("""
+        TextManagement.displayTextColor("""
                 
                 ---------Specify Media---------
                 
                 Please specify which media to add.
                 
-                Search by title: """);
+                Search by title: """, Colors.BLUE);
 
         String userSearch = menu.getUserInput();
         ArrayList<? extends Media> searchedList;
@@ -665,7 +665,7 @@ public class Menu
                     VideoFormats chosenFormat;
                     if(searchedList.get(1).getFormats().size() == 1) //if one format available
                     {
-                        chosenFormat = (VideoFormats) searchedList.get(1).getFormats().get(1);
+                        chosenFormat = (VideoFormats) searchedList.get(1).getFormats().get(0);
                         selectedMovie = (Movie) searchedList.get(1);
                         selectedMovie.setChosenFormat(chosenFormat);
 
@@ -821,7 +821,7 @@ public class Menu
                     Consoles chosenFormat;
                     if(searchedList.get(1).getFormats().size() == 1) //if one format available
                     {
-                        chosenFormat = (Consoles) searchedList.get(1).getFormats().get(1);
+                        chosenFormat = (Consoles) searchedList.get(1).getFormats().get(0);
                         selectedGame = (VideoGame) searchedList.get(1);
                         selectedGame.setChosenFormat(chosenFormat);
 
@@ -949,7 +949,7 @@ public class Menu
                     VideoFormats chosenFormat;
                     if(searchedList.get(2).getFormats().size() == 1) //if one format available
                     {
-                        chosenFormat = (VideoFormats) searchedList.get(2).getFormats().get(2);
+                        chosenFormat = (VideoFormats) searchedList.get(2).getFormats().get(0);
                         selectedMovie = (Movie) searchedList.get(2);
                         selectedMovie.setChosenFormat(chosenFormat);
 
@@ -1105,7 +1105,7 @@ public class Menu
                     Consoles chosenFormat;
                     if(searchedList.get(2).getFormats().size() == 1) //if one format available
                     {
-                        chosenFormat = (Consoles) searchedList.get(2).getFormats().get(2);
+                        chosenFormat = (Consoles) searchedList.get(2).getFormats().get(0);
                         selectedGame = (VideoGame) searchedList.get(2);
                         selectedGame.setChosenFormat(chosenFormat);
 
