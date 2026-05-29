@@ -23,6 +23,6 @@ public class LineItem
     {
         return String.format("""
                 %s
-                ........$%.2f\n""", this.name, this.price);
+                ..........................$%.2f\n""", this.name, this.price);
     }
 }

@@ -42,9 +42,11 @@ public class WriteToFile
                             
                             Thank you for your patronage.
                                   """);
+            fw.write("\n");
             String receiptStamp = timeStamp.createPrettyTimeStamp();
             fw.write("------"+ receiptStamp + "------");
 
+            fw.write("\n");
             fw.write("\nItems Purchased:\n");
 
             for(LineItem item : order.getItems())
@@ -57,8 +59,8 @@ public class WriteToFile
 
             String endLine = String.format("""
                     ....................Total: %.2f
-                    ....................Tax: %.2f
-                    ....................Grand Total: %.2f""", order.getTotal(), order.getTotalTax(), order.getGrandTotal());
+                    ....................Tax:   %.2f
+                    ..............Grand Total: %.2f""", order.getTotal(), order.getTotalTax(), order.getGrandTotal());
             fw.write(endLine);
 
             fw.close();
@@ -92,7 +94,7 @@ public class WriteToFile
 
         System.out.printf("""
                 ....................Total: %.2f
-                ....................Tax: %.2f
-                ....................Grand Total: %.2f\n\n""", order.getTotal(), order.getTotalTax(), order.getGrandTotal());
+                ....................Tax:   %.2f
+                ..............Grand Total: %.2f\n\n""", order.getTotal(), order.getTotalTax(), order.getGrandTotal());
     }
 }

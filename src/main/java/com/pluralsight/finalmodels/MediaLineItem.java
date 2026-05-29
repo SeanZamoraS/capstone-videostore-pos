@@ -20,6 +20,6 @@ public class MediaLineItem extends LineItem
         return String.format("""
                 %s
                 %s
-                ........$%.2f\n""", super.getName(), this.comment, super.getPrice());
+                ..........................$%.2f\n""", super.getName(), this.comment, super.getPrice());
     }
 }

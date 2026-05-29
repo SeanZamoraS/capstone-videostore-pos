@@ -27,7 +27,7 @@ public class Menu
     public static void startMenu()
     {
         TextManagement.displayText("""
-                ---------Start Menu---------
+                --------------Start Menu--------------
                 
                 Le Epic Video Store | Point of Sales
                 
@@ -117,7 +117,7 @@ public class Menu
                 
                 Enter a number to continue:
                 
-                1) Confirm order and checkout
+                1) Check order
                 2) Cancel order
                 
                 0) Back
@@ -154,10 +154,10 @@ public class Menu
                     case 1:
                         wtf.writeToReceipt(currentOrder);
                         double confirmedTotal = currentOrder.getGrandTotal();
-                        TextManagement.displayText("\nConfirmed, ring customer up for $" + confirmedTotal + ".");
-                        TextManagement.displayText("Check receipts file for record of transaction if desired.");
+                        System.out.printf("\nConfirmed, ring customer up for $%.2f.\n", confirmedTotal);
+                        TextManagement.displayText("Check receipts folder for record of transaction if desired.");
 
-                        TextManagement.displayText("\nStarting from fresh...");
+                        TextManagement.displayText("\nStarting from fresh...\n");
                         TextManagement.displayText("Returning to start menu.");
                         TextManagement.pressEnterToContinue();
                         startMenu();
