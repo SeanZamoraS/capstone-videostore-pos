@@ -1,0 +1,133 @@
+if(searchedList.get(0).getId().contains("VG")) //
+                {
+                    Consoles chosenFormat;
+                    if(searchedList.get(0).getFormats().size() == 1) //if one format available
+                    {
+                        chosenFormat = (Consoles) searchedList.get(0).getFormats().get(0);
+                        selectedGame = (VideoGame) searchedList.get(0);
+                        selectedGame.setChosenFormat(chosenFormat);
+
+                        TextManagement.displayText("\nOnly one format available: " + selectedGame.getChosenFormat().toString()
+                        + ".");
+                    }
+                    else //if many formats available
+                    {
+                        selectedGame = (VideoGame) searchedList.get(0);
+                        TextManagement.displayText("Here are the available formats for this movie:");
+                        TextManagement.displayFormatsAvailable(selectedMovie); //display formats
+                        TextManagement.displayText("""
+                                Please enter a video format for the movie.
+                                For example, type VHS, SD, HD, or BLURAY (as available).\n""");
+
+                        String videoFChoice = menu.getUserInput();
+
+                        boolean searchHit = false;
+
+                        for (VideoFormats format : selectedMovie.getFormats()) // check for matching format
+                        {
+                            if (videoFChoice.toLowerCase().contains(format.toString().toLowerCase()))
+                            {
+                                selectedMovie.setChosenFormat(format); //what we wanted to do
+                                searchHit = true;
+                            }
+                        }
+                        if(!searchHit) //no matching format? go back
+                        {
+                            String rememberWord = "";
+                            if (rent) {rememberWord = "trying to rent.";}
+                            else {rememberWord = "trying to purchase.";}
+
+                            TextManagement.displayText("Returning to Add Item screen... check catalogue, choose valid selection, and try again.");
+                            TextManagement.displayText("Remembering that you were " + rememberWord);
+                            TextManagement.pressEnterToContinue();
+                            addMediaScreen(rent, currentOrder);
+                            break;
+                        }
+                    }
+                    boolean isWS = false;
+                    if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {//if format is VHS or SD
+                        TextManagement.displayText("""
+
+                                Would you like the fullscreen or widescreen version?
+                                Enter a number to continue:
+
+                                1) Fullscreen
+                                2) Widescreen
+                                """);
+                        int screenChoice = menu.getUserInputAsInt(1, 1, 2);
+
+                        switch(screenChoice)
+                        {
+                            case 1:
+                                isWS = false; //chose fullscreen
+                                break;
+                            case 2:
+                                isWS = true; //chose widescreen
+                                break;
+                        }
+                    }
+                    if (selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                    {
+                        String word = "fullscreen";
+                        if(isWS)
+                        {
+                            word = "widescreen";
+                        }
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() +
+                                " ("+ word.toUpperCase() + ")" + "\n");
+                    }
+                    else
+                    {
+                        TextManagement.displayText("\nSelected format: " + selectedMovie.getChosenFormat().toString() + "\n");
+                    }
+                    if(rent) // if renting...
+                    {
+                        System.out.println("""
+                                Enter the number of days to rent:
+                                (You can rent 1 day, 3 days, or 7 days)
+
+                                Enter 1, 3, or 7.""");
+                        int daysRented = menu.getUserInputAsInt(1, 1, 3, 7);
+
+                        double basePrice = PriceCalculator.calculateMoviePurchase(selectedMovie, selectedMovie.getChosenFormat());
+                        double finalPrice = PriceCalculator.calculateRental(daysRented, basePrice);
+
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if renting and VHS/SD
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLineWSFS(selectedMovie, finalPrice, daysRented, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                        else
+                        {//if renting any other format
+                            MediaLineItem orderLine =
+                                    LineItemBuilder.buildRentalLine(selectedMovie, finalPrice, daysRented);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+
+                    }
+                    else //purchasing
+                    {
+                        if(selectedMovie.getChosenFormat() == VideoFormats.SD || selectedMovie.getChosenFormat() == VideoFormats.VHS)
+                        {//if buying an VHS/SD
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLineWSFS(selectedMovie, isWS);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                        else
+                        {//if buying any other format
+                            LineItem orderLine =
+                                    LineItemBuilder.buildSimpleLine(selectedMovie);
+                            currentOrder.addItem(orderLine);
+                            indexOfItemAdded = currentOrder.getItems().indexOf(orderLine);
+                            itemAdded = currentOrder.getItems().get(indexOfItemAdded);
+                        }
+                    }
+                }
