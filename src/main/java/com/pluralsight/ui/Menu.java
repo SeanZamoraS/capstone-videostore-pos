@@ -1,5 +1,6 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.filemanagement.WriteToFile;
 import com.pluralsight.finalmodels.MediaLineItem;
 import com.pluralsight.finalmodels.LineItem;
 import com.pluralsight.finalmodels.Order;
@@ -7,7 +8,6 @@ import com.pluralsight.models.*;
 import com.pluralsight.services.LineItemBuilder;
 import com.pluralsight.services.PriceCalculator;
 import com.pluralsight.services.Search;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -92,6 +92,7 @@ public class Menu
                     break;
 
                 case 5:
+                    checkOutScreen(currentOrder);
                     break;
                 case 6:
                     startMenu();
@@ -106,6 +107,74 @@ public class Menu
                     TextManagement.pressEnterToContinue();
                     break;
             }
+        }
+    }
+
+    private static void checkOutScreen(Order currentOrder)
+    {
+        TextManagement.displayText("""
+                ---------Checkout---------
+                
+                Enter a number to continue:
+                
+                1) Confirm order and checkout
+                2) Cancel order
+                
+                0) Back
+                """);
+
+        int choice = menu.getUserInputAsInt(1, 1,2, 0);
+
+        switch (choice)
+        {
+            case 1:
+                double total = PriceCalculator.calculateTotal(currentOrder);
+                double tax = PriceCalculator.calculateTax(currentOrder);
+                double grandTotal = PriceCalculator.calculateGrandTotal(total, tax);
+
+                currentOrder.setTotal(total);
+                currentOrder.setTotalTax(tax);
+                currentOrder.setGrandTotal(grandTotal);
+
+                WriteToFile wtf = new WriteToFile();
+                wtf.showReceipt(currentOrder);
+
+                TextManagement.displayText("""
+                        Is this receipt correct?
+                        
+                        Enter a number to continue: 
+                        
+                        1) Yes, check out now
+                        2) No, go back\n""");
+
+                int confirm = menu.getUserInputAsInt(1, 1, 2);
+
+                switch(confirm)
+                {
+                    case 1:
+                        wtf.writeToReceipt(currentOrder);
+                        double confirmedTotal = currentOrder.getGrandTotal();
+                        TextManagement.displayText("\nConfirmed, ring customer up for $" + confirmedTotal + ".");
+                        TextManagement.displayText("Check receipts file for record of transaction if desired.");
+
+                        TextManagement.displayText("\nStarting from fresh...");
+                        TextManagement.displayText("Returning to start menu.");
+                        TextManagement.pressEnterToContinue();
+                        startMenu();
+                        break;
+                    case 2:
+                        orderManagementMenu(currentOrder);
+                        break;
+                }
+                break;
+            case 2:
+                TextManagement.displayText("Returning to start menu.");
+                TextManagement.pressEnterToContinue();
+                startMenu();
+                break;
+            case 0:
+                orderManagementMenu(currentOrder);
+                break;
         }
     }
 
@@ -340,6 +409,8 @@ public class Menu
                             itemAdded = currentOrder.getItems().get(indexOfItemAdded);
                         }
 
+
+
                     }
                     else //purchasing
                     {
@@ -361,7 +432,7 @@ public class Menu
                         }
                     }
                 }
-                //diverge to game branch, copy pasting stuff ++++++++
+                //diverge to game branch, copy pasting stuff +++++++++++++++++++++++++++
                 if(searchedList.get(0).getId().contains("VG")) //
                 {
                     Consoles chosenFormat;
